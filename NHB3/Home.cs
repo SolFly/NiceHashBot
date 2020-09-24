@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -185,7 +185,7 @@ namespace NHB3
         }
         
         private void runBot() {
-            if (!botRunning) {
+                if (!botRunning) {
                 return;
             }
 
@@ -237,9 +237,13 @@ namespace NHB3
                         float order_speed = float.Parse("" + order["acceptedCurrentSpeed"], CultureInfo.InvariantCulture);
                         float order_price = float.Parse("" + order["price"], CultureInfo.InvariantCulture);
                         float price_step_down = float.Parse("" + algo["priceDownStep"], CultureInfo.InvariantCulture);
-                        Console.WriteLine("?adjust price?; order {0}, speed {1}, price {2}, step_down {3}", order["id"], order_speed, order_price, price_step_down);
 
-                        if (saved.increasePrice && order_speed == 0) {
+                        float limit = float.Parse("" + algo["limit"], CultureInfo.InvariantCulture);
+                        float speed_percent = (order_speed / limit) * 100;
+
+                        Console.WriteLine("?adjust price?; order {0}, speed {1}, price {2}, step_down {3}", order["id"], order_speed, order_price, price_step_down, speed_percent);
+
+                        if (saved.increasePrice && order_speed == 50) {
                             float new_price = (float)Math.Round(order_price + (price_step_down * -1), 4);
                             Console.WriteLine("===> price up order to {0}", new_price);
                             ac.updateOrder("" + order["algorithm"]["algorithm"], "" + order["id"], new_price.ToString(new CultureInfo("en-US")), "" + order["limit"]);
